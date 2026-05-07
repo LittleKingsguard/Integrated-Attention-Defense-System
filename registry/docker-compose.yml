@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: ads_registry_db
+    restart: always
+    environment:
+      POSTGRES_USER: ads_user
+      POSTGRES_PASSWORD: ads_password
+      POSTGRES_DB: ads_registry
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
