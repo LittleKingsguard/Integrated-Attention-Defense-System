@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+sqlmodel
+pgvector
+python-dotenv
+httpx
+ollama
+langchain-ollama
+langchain-community
+langchain-postgres
+psycopg2-binary
+pytest

@@ -137,3 +137,5 @@ cython_debug/
 registry/test_registry.db
 registry/.env
 registry/pgdata/
+datalink/.venv
+datalink/.env
