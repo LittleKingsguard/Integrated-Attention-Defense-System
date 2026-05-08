@@ -1,7 +1,5 @@
 import os
-# pyrefly: ignore [missing-import]
 from dotenv import load_dotenv
-# pyrefly: ignore [missing-import]
 from sqlmodel import create_engine, Session, SQLModel
 
 load_dotenv()

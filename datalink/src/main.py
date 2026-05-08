@@ -1,6 +1,4 @@
-# pyrefly: ignore [missing-import]
 from fastapi import FastAPI, Depends, HTTPException
-# pyrefly: ignore [missing-import]
 from sqlmodel import Session
 from .database import get_session, init_db
 from .models import ChannelMessage, MessageQuery

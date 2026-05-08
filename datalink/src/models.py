@@ -1,8 +1,6 @@
 from typing import List, Optional, Dict, Any
 from datetime import datetime
-# pyrefly: ignore [missing-import]
 from sqlmodel import SQLModel, Field, Column
-# pyrefly: ignore [missing-import]
 from pgvector.sqlalchemy import Vector
 
 class ChannelMessage(SQLModel, table=True):

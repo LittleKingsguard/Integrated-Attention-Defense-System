@@ -1,5 +1,4 @@
 from typing import List, Optional, Dict, Any
-# pyrefly: ignore [missing-import]
 from sqlmodel import SQLModel, Field, Column, JSON
 
 class RegistryUser(SQLModel, table=True):

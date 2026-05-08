@@ -1,11 +1,8 @@
 import os
 from typing import List, Optional
-# pyrefly: ignore [missing-import]
 from sqlmodel import Session, select
-# pyrefly: ignore [missing-import]
 from langchain_ollama import OllamaEmbeddings
 from ..models import ChannelMessage
-# pyrefly: ignore [missing-import]
 from pgvector.sqlalchemy import Vector
 
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
