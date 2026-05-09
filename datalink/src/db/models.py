@@ -1,5 +1,5 @@
 from typing import List, Optional, Dict, Any
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlmodel import SQLModel, Field, Column
 from pgvector.sqlalchemy import Vector
 
@@ -9,7 +9,7 @@ class ChannelMessage(SQLModel, table=True):
     channel_id: str
     user_id: str
     content: str
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     
     # Vector column for semantic search
     # embeddinggemma typically uses 768 or 1024 dimensions. 
@@ -17,7 +17,7 @@ class ChannelMessage(SQLModel, table=True):
     # I'll use 1024 as a common default for modern small-medium models, 
     # but the extension handles dynamic sizing if we don't specify, 
     # though it's better to be explicit.
-    embedding: Optional[List[float]] = Field(default=None, sa_column=Column(Vector(768))) 
+    embedding: Any = Field(default=None, sa_column=Column(Vector(768))) 
 
 class MessageQuery(SQLModel):
     query: str

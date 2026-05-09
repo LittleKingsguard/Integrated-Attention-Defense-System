@@ -1,19 +1,23 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException
 from sqlmodel import Session
-from .database import get_session, init_db
-from .models import ChannelMessage, MessageQuery
-from .services import rag
-from .webhooks import slack, teams
+from datalink.src.db.core import get_session, init_db
+from datalink.src.db.models import ChannelMessage, MessageQuery
+from datalink.src.services import rag
+from datalink.src.webhooks import slack, teams
 
-app = FastAPI(title="Datalink RAG Service", version="1.0.0")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup logic
+    init_db()
+    yield
+    # Shutdown logic (none needed yet)
 
-# Include webhook routers (to be implemented)
+app = FastAPI(title="Datalink RAG Service", version="1.0.0", lifespan=lifespan)
+
+# Include webhook routers
 app.include_router(slack.router, prefix="/webhooks/slack", tags=["Slack"])
 app.include_router(teams.router, prefix="/webhooks/teams", tags=["Teams"])
-
-@app.on_event("startup")
-def on_startup():
-    init_db()
 
 @app.post("/query", response_model=list[ChannelMessage])
 def query_context(query_data: MessageQuery, session: Session = Depends(get_session)):

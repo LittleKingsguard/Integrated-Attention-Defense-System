@@ -1,0 +1,13 @@
+services:
+  datalink_db:
+    image: postgres:latest
+    container_name: ads_datalink_db
+    restart: always
+    environment:
+      POSTGRES_USER: datalink_user
+      POSTGRES_PASSWORD: datalink_password
+      POSTGRES_DB: ads_datalink
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data

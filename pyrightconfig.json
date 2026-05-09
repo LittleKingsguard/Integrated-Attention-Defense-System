@@ -1,0 +1,12 @@
+{
+    "venvPath": ".",
+    "venv": ".venv",
+    "include": [
+        "datalink/src",
+        "registry/src"
+    ],
+    "extraPaths": [
+        "."
+    ],
+    "typeCheckingMode": "basic"
+}

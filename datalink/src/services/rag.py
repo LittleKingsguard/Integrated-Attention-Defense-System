@@ -1,25 +1,18 @@
 import os
-from typing import List, Optional
+from typing import List, Optional, Sequence
 from sqlmodel import Session, select
-from langchain_ollama import OllamaEmbeddings
-from ..models import ChannelMessage
-from pgvector.sqlalchemy import Vector
+from datalink.src.db.embeddings import get_embeddings
+from datalink.src.db.models import ChannelMessage
 
-OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "embeddinggemma")
+embeddings = get_embeddings()
 
-embeddings = OllamaEmbeddings(
-    base_url=OLLAMA_BASE_URL,
-    model=EMBEDDING_MODEL
-)
-
-def search_messages(session: Session, query: str, top_k: int = 5, platform: Optional[str] = None) -> List[ChannelMessage]:
+def search_messages(session: Session, query: str, top_k: int = 5, platform: Optional[str] = None) -> Sequence[ChannelMessage]:
     # 1. Generate embedding for the query
     query_vector = embeddings.embed_query(query)
     
     # 2. Perform similarity search using PGVector
     statement = select(ChannelMessage).order_by(
-        ChannelMessage.embedding.cosine_distance(query_vector)
+        ChannelMessage.embedding.cosine_distance(query_vector) # type: ignore
     ).limit(top_k)
     
     if platform:

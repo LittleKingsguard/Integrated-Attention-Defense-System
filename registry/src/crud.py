@@ -1,7 +1,7 @@
 from typing import Optional
 from sqlmodel import Session, select
-from .models import RegistryUser
-from .schemas import UserCreate
+from registry.src.db.models import RegistryUser
+from registry.src.schemas import UserCreate
 
 def get_user(session: Session, user_id: str) -> Optional[RegistryUser]:
     statement = select(RegistryUser).where(RegistryUser.user_id == user_id)

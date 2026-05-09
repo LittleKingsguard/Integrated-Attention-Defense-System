@@ -1,15 +1,19 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException, status, Response
 from sqlmodel import Session
-from .database import get_session, init_db
-from .schemas import UserCreate, UserRead
-from . import crud
-from .models import RegistryUser
+from registry.src.db.core import get_session, init_db
+from registry.src.schemas import UserCreate, UserRead
+from registry.src import crud
+from registry.src.db.models import RegistryUser
 
-app = FastAPI(title="ADS Discovery Registry", version="1.0.0")
-
-@app.on_event("startup")
-def on_startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup logic
     init_db()
+    yield
+    # Shutdown logic
+
+app = FastAPI(title="ADS Discovery Registry", version="1.0.0", lifespan=lifespan)
 
 @app.post("/api/v1/registry/", response_model=UserRead)
 def register_user(user: UserCreate, response: Response, session: Session = Depends(get_session)):

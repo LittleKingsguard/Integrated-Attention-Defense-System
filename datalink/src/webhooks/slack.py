@@ -6,7 +6,7 @@ import time
 from fastapi import APIRouter, Request, Header, HTTPException, Depends
 # pyrefly: ignore [missing-import]
 from sqlmodel import Session
-from ..database import get_session
+from ..db.core import get_session
 from ..services import rag
 
 router = APIRouter()
