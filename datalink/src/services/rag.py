@@ -1,4 +1,5 @@
 import os
+import httpx
 from typing import List, Optional, Sequence
 from sqlmodel import Session, select
 from datalink.src.db.embeddings import get_embeddings
@@ -37,4 +38,26 @@ def store_message(session: Session, platform: str, channel_id: str, user_id: str
     session.add(message)
     session.commit()
     session.refresh(message)
+
+    # Notify Radar service (fire and forget / async)
+    radar_url = os.getenv("RADAR_URL", "http://localhost:8002")
+    if radar_url:
+        try:
+            # Note: In a production app, this would be a background task or message queue
+            # For now, we'll do a quick async POST using httpx
+            import threading
+            def notify_radar_sync():
+                try:
+                    httpx.post(f"{radar_url}/api/v1/radar/process", json={
+                        "user_id": user_id,
+                        "content": content,
+                        "source": f"datalink_{platform}"
+                    }, timeout=2.0)
+                except Exception as e:
+                    print(f"Failed to notify Radar: {e}")
+            
+            threading.Thread(target=notify_radar_sync).start()
+        except Exception:
+            pass
+
     return message

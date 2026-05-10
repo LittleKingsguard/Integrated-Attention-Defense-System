@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+sqlmodel
+httpx
+python-dotenv
+langchain-ollama
+psycopg2-binary
