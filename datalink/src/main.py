@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException
 from sqlmodel import Session
 from datalink.src.db.core import get_session, init_db
-from datalink.src.db.models import ChannelMessage, MessageQuery
+from datalink.src.db.models import ChannelMessage, MessageQuery, MessageIngest
 from datalink.src.services import rag
 from datalink.src.webhooks import slack, teams
 
@@ -33,6 +33,24 @@ def query_context(query_data: MessageQuery, session: Session = Depends(get_sessi
             platform=query_data.platform
         )
         return results
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/ingest", response_model=ChannelMessage)
+def ingest_message(message_data: MessageIngest, session: Session = Depends(get_session)):
+    """
+    Push new messages into the Datalink store.
+    Used by ADS agents for Email/A2A updates.
+    """
+    try:
+        message = rag.store_message(
+            session,
+            platform=message_data.platform,
+            channel_id=message_data.channel_id,
+            user_id=message_data.user_id,
+            content=message_data.content
+        )
+        return message
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

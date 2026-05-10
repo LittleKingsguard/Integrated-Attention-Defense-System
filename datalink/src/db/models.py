@@ -23,3 +23,9 @@ class MessageQuery(SQLModel):
     query: str
     top_k: int = 5
     platform: Optional[str] = None
+
+class MessageIngest(SQLModel):
+    platform: str
+    channel_id: str
+    user_id: str
+    content: str
